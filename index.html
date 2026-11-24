@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>NEURALIS OMNI // Sovereign Frontier Multimodal AI OS</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base Layout */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--slds-bg-canvas);
+      color: var(--slds-text-primary);
+      font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Global Navigation Bar */
+    .slds-navbar {
+      height: 56px;
+      border-bottom: 1px solid var(--slds-border-default);
+      background-color: rgba(11, 12, 16, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--slds-specular-top);
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-beacon {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--slds-accent-emerald);
+      box-shadow: 0 0 10px var(--slds-accent-emerald);
+      animation: pulse-beacon 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-beacon {
+      0%, 100% { opacity: 0.6; transform: scale(0.95); }
+      50% { opacity: 1.0; transform: scale(1.15); }
+    }
+
+    .brand-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Main Application Grid */
+    .slds-workspace {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.25rem;
+      padding: 1.25rem;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .slds-workspace {
+        grid-template-columns: 1fr;
+        padding: 0.75rem;
+      }
+    }
+
+    /* Subsystem Tab Navigation */
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--slds-border-subtle);
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.45rem 0.9rem;
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--slds-text-tertiary);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--slds-radius-element);
+      cursor: pointer;
+      transition: all 0.2s var(--slds-ease-spring);
+    }
+
+    .tab-btn:hover {
+      color: var(--slds-text-primary);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active-tab {
+      color: #07080B;
+      background: #F2F4F8;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* View Containers */
+    .view-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Sensory Grid: 3D Core + Vision HUD */
+    .sensory-stage {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 1rem;
+      min-height: 380px;
+    }
+
+    @media (max-width: 768px) {
+      .sensory-stage {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .canvas-panel {
+      background-color: #050609;
+      border: 1px solid var(--slds-border-default);
+      border-radius: var(--slds-radius-card);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--slds-specular-top);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--slds-border-subtle);
+      background: rgba(16, 18, 24, 0.6);
+      z-index: 10;
+    }
+
+    .panel-title {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--slds-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .canvas-viewport {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Hidden video element used as webcam source */
+    #webcam-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      opacity: 0.001;
+      pointer-events: none;
+    }
+
+    /* Audio Spectrogram Container */
+    .audio-panel {
+      height: 140px;
+    }
+
+    /* Sidebar Cockpit */
+    .cockpit-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* Phone Simulator Frame Wrapper */
+    #phone-frame-wrapper {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(16px);
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Modal Overlay */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      padding: 1rem;
+    }
+
+    .modal-box {
+      background-color: var(--slds-bg-base);
+      border: 1px solid var(--slds-border-strong);
+      border-radius: var(--slds-radius-card);
+      box-shadow: var(--slds-shadow-floating), var(--slds-specular-top);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* Print Styles */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .slds-audit-modal, .slds-audit-modal * {
+        visibility: visible;
+      }
+      .slds-audit-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: #000000 !important;
+        background: #FFFFFF !important;
+      }
+      .slds-audit-modal * {
+        color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="slds-canvas">
+
+  <!-- Top Navigation Bar -->
+  <header class="slds-navbar">
+    <div class="brand-mark">
+      <div class="status-beacon"></div>
+      <div class="brand-title">
+        <span>NEURALIS OMNI</span>
+        <span class="slds-badge" style="color: #00E5FF; border-color: rgba(0,229,255,0.25);">v2.4.0 PURE SOFTWARE AI</span>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <button id="btn-sound-mute" class="slds-button-secondary text-xs">AUDIO: ACTIVE</button>
+      <button id="btn-viewport-mode" class="slds-button-secondary text-xs">PREVIEW PHONE (FRAME)</button>
+      <button id="btn-qr-sync" class="slds-button-secondary text-xs">PHONE SYNC</button>
+      <button id="btn-export-report" class="slds-button-signal text-xs">AUDIT REPORT</button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="slds-workspace" id="app-container">
+
+    <!-- Primary Interactive Stage -->
+    <section>
+      <!-- Subsystem Navigation Tabs -->
+      <nav class="tab-bar">
+        <button id="tab-sensory" class="tab-btn active-tab">SENSORY CORE</button>
+        <button id="tab-reasoning" class="tab-btn">DEEP REASONING (o1/R1)</button>
+        <button id="tab-swarm" class="tab-btn">AGENT SWARM</button>
+      </nav>
+
+      <!-- VIEW 1: SENSORY CORE -->
+      <div id="view-sensory" class="view-content">
+        <div class="sensory-stage">
+          
+          <!-- 3D Holographic Synaptic Core -->
+          <div class="canvas-panel">
+            <div class="panel-header">
+              <span class="panel-title">3D HOLOGRAPHIC SYNAPSE CORTEX</span>
+              <span class="slds-badge" style="color:#FF5500; font-size:0.625rem;">ORBITAL TOUCH / DRAG</span>
+            </div>
+            <div class="canvas-viewport">
+              <canvas id="neural-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Multimodal Vision HUD -->
+          <div class="canvas-panel">
+            <div class="panel-header">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="panel-title">OPTICAL ATTENTION HUD</span>
+                <span id="vision-mode-badge" class="slds-badge" style="color:#00E5FF; font-size:0.625rem;">SYNTHETIC FEED</span>
+              </div>
+              <div style="display: flex; gap: 0.25rem;">
+                <button id="btn-toggle-camera" class="slds-button-secondary" style="padding:0.25rem 0.5rem; font-size:0.6875rem;">START WEBCAM</button>
+                <button id="btn-switch-facing" class="slds-button-secondary" style="padding:0.25rem 0.5rem; font-size:0.6875rem;">FLIP</button>
+                <button id="btn-synthetic-vision" class="slds-button-secondary" style="padding:0.25rem 0.5rem; font-size:0.6875rem;">SYNTH</button>
+              </div>
+            </div>
+            <div class="canvas-viewport">
+              <video id="webcam-video" autoplay playsinline muted></video>
+              <canvas id="vision-canvas"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Real-Time Acoustic Spectrogram -->
+        <div class="canvas-panel audio-panel">
+          <div class="panel-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="panel-title">ACOUSTIC FFT SPECTROGRAM & NEURAL VOICE</span>
+              <span id="audio-mode-badge" class="slds-badge" style="color:#00E5FF; font-size:0.625rem;">SYNTHETIC ACOUSTIC</span>
+            </div>
+            <div style="display: flex; gap: 0.25rem;">
+              <button id="btn-toggle-mic" class="slds-button-secondary" style="padding:0.25rem 0.5rem; font-size:0.6875rem;">ENGAGE MIC</button>
+              <button id="btn-synthetic-audio" class="slds-button-secondary" style="padding:0.25rem 0.5rem; font-size:0.6875rem;">SYNTH</button>
+              <button id="btn-voice-summary" class="slds-button-primary" style="padding:0.25rem 0.5rem; font-size:0.6875rem;">VOICE BRIEFING</button>
+            </div>
+          </div>
+          <div class="canvas-viewport">
+            <canvas id="audio-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: DEEP REASONING (o1 / DeepSeek R1) -->
+      <div id="view-reasoning" class="view-content hidden">
+        <div class="slds-card" style="padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div>
+              <h2 style="font-size: 1.125rem; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em;">
+                Frontier Deep Cognitive Chain-of-Thought Engine
+              </h2>
+              <p style="font-size: 0.75rem; color: #9BA1B0; margin-top: 0.25rem;">
+                Multi-stage hypothesis search, adversarial counter-example simulation, and formal proof convergence.
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="slds-badge" id="reasoning-stage-badge" style="color: #00E5FF;">IDLE / READY</span>
+              <span class="slds-badge" id="reasoning-timer">0.0s</span>
+            </div>
+          </div>
+
+          <!-- Preset Demonstration Buttons -->
+          <div style="margin-bottom: 0.75rem;">
+            <div style="font-family: 'Geist Mono', monospace; font-size: 0.6875rem; color: #7E828C; text-transform: uppercase; margin-bottom: 0.35rem;">
+              Select Benchmark Domain:
+            </div>
+            <div id="reasoning-presets" style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
+          </div>
+
+          <!-- Custom Query Bar -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <input id="custom-prompt-input" type="text" 
+                   placeholder="Enter custom engineering query or select a preset above..."
+                   style="flex: 1; background: #050609; border: 1px solid var(--slds-border-default); border-radius: var(--slds-radius-element); padding: 0.625rem 0.85rem; font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: #FFFFFF; outline: none; box-shadow: var(--slds-specular-top);" />
+            <button id="btn-run-reasoning" class="slds-button-signal">
+              EXECUTE REASONING PROOF
+            </button>
+          </div>
+
+          <!-- Live Reasoning Stream Terminal -->
+          <div id="reasoning-terminal" class="slds-terminal" style="height: 380px;">
+            <div style="color: #7E828C; text-align: center; padding-top: 100px;">
+              [SELECT A PRESET OR SUBMIT A QUERY TO STREAM MULTI-STAGE REASONING TRACE]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 3: AGENT SWARM -->
+      <div id="view-swarm" class="view-content hidden">
+        <div class="slds-card" style="padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+              <h2 style="font-size: 1.125rem; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em;">
+                Autonomous Multi-Agent Swarm Orchestrator
+              </h2>
+              <p style="font-size: 0.75rem; color: #9BA1B0; margin-top: 0.25rem;">
+                Real-time Directed Acyclic Graph (DAG) task distribution and RAFT-NEURAL consensus.
+              </p>
+            </div>
+            <span class="slds-badge" style="color: #10B981;">CONSENSUS: SYNCHRONIZED</span>
+          </div>
+
+          <!-- Swarm Agent Cards -->
+          <div id="swarm-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;"></div>
+
+          <!-- Swarm Event Log -->
+          <div style="font-family: 'Geist Mono', monospace; font-size: 0.6875rem; color: #7E828C; text-transform: uppercase; margin-bottom: 0.35rem;">
+            Live Inter-Agent Packet & Consensus Stream:
+          </div>
+          <div id="swarm-log" class="slds-terminal" style="height: 180px;"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Sidebar Telemetry Cockpit -->
+    <aside class="cockpit-panel">
+      
+      <!-- Primary Biometric Telemetry -->
+      <div class="slds-card" style="padding: 1rem;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 0.6875rem; color: #00E5FF; font-weight: 600; text-transform: uppercase; margin-bottom: 0.75rem; display: flex; justify-content: space-between;">
+          <span>SENSORY TELEMETRY</span>
+          <span>REAL-TIME</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <div class="slds-stat-box">
+            <div class="slds-stat-label">ATTENTION</div>
+            <div class="slds-stat-value" id="val-attention" style="color: #00E5FF;">94.8%</div>
+          </div>
+          <div class="slds-stat-box">
+            <div class="slds-stat-label">COG LOAD</div>
+            <div class="slds-stat-value" id="val-cognitive">44.0%</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <div class="slds-stat-box">
+            <div class="slds-stat-label">VOICE PITCH</div>
+            <div class="slds-stat-value" id="val-pitch">142 Hz</div>
+          </div>
+          <div class="slds-stat-box">
+            <div class="slds-stat-label">STRESS INDEX</div>
+            <div class="slds-stat-value" id="val-stress" style="color: #FF5500;">14.5%</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <div class="slds-stat-box">
+            <div class="slds-stat-label">LATENCY</div>
+            <div class="slds-stat-value" id="val-latency" style="color: #10B981;">6.2ms</div>
+          </div>
+          <div class="slds-stat-box">
+            <div class="slds-stat-label">V-SYNC FPS</div>
+            <div class="slds-stat-value" id="val-fps">60 FPS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edge Client Architecture Profile -->
+      <div class="slds-card" style="padding: 1rem;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 0.6875rem; color: #9BA1B0; font-weight: 600; text-transform: uppercase; margin-bottom: 0.75rem;">
+          EDGE CLIENT PROFILE
+        </div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: var(--slds-text-secondary); line-height: 1.8;">
+          <div><strong style="color:#FFF;">RUNTIME:</strong> 100% In-Browser Native</div>
+          <div><strong style="color:#FFF;">HARDWARE DEP:</strong> ZERO (Pure Software)</div>
+          <div><strong style="color:#FFF;">SENSORS:</strong> Optical Webcam + Audio DSP</div>
+          <div><strong style="color:#FFF;">PRIVACY:</strong> Edge-Isolated (0% Cloud)</div>
+          <div><strong style="color:#FFF;">PORTABILITY:</strong> Phone & Laptop Verified</div>
+        </div>
+      </div>
+
+      <!-- Quick Action Guide -->
+      <div class="slds-card" style="padding: 1rem; border-color: rgba(255, 85, 0, 0.3);">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 0.6875rem; color: #FF5500; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">
+          EXECUTIVE DEFENSE SUMMARY
+        </div>
+        <p style="font-size: 0.75rem; color: #9BA1B0; line-height: 1.5; margin-bottom: 0.75rem;">
+          "Sir, this project replaces hardware dependency with high-performance edge multimodal sensory computing operating directly on any phone or laptop browser."
+        </p>
+        <button id="btn-quick-audit" class="slds-button-primary" style="width: 100%; font-size: 0.75rem;" onclick="document.getElementById('btn-export-report').click()">
+          VIEW CERTIFIED AUDIT REPORT
+        </button>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Mobile Viewport Frame Mockup (Toggleable for Laptop Demo) -->
+  <div id="phone-frame-wrapper" class="hidden">
+    <div class="slds-phone-frame">
+      <div class="slds-phone-island">
+        <div class="slds-phone-camera"></div>
+      </div>
+      <iframe src="index.html" style="width: 100%; height: 100%; border: none;"></iframe>
+      <button onclick="document.getElementById('phone-frame-wrapper').classList.add('hidden')" 
+              class="slds-button-primary" 
+              style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-size: 0.6875rem; padding: 0.35rem 0.75rem; z-index: 60;">
+        EXIT PHONE VIEW
+      </button>
+    </div>
+  </div>
+
+  <!-- Dynamic Modal Overlay (For QR Sync & Audit Report) -->
+  <div id="modal-overlay" class="modal-backdrop hidden">
+    <div id="modal-content" class="modal-box"></div>
+  </div>
+
+  <!-- Core Orchestrator Entrypoint -->
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
