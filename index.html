@@ -309,6 +309,10 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <a href="presentation/index.html" target="_blank" id="btn-open-slides" class="slds-button-primary text-xs" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; background: linear-gradient(135deg, #00E5FF 0%, #0088A3 100%); border-color: #00E5FF; color: #07080B; font-weight: 700; padding: 0.35rem 0.75rem;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        SLIDES (PPT)
+      </a>
       <button id="btn-sound-mute" class="slds-button-secondary text-xs">AUDIO: ACTIVE</button>
       <button id="btn-viewport-mode" class="slds-button-secondary text-xs">PREVIEW PHONE (FRAME)</button>
       <button id="btn-qr-sync" class="slds-button-secondary text-xs">PHONE SYNC</button>
@@ -514,17 +518,25 @@
         </div>
       </div>
 
-      <!-- Quick Action Guide -->
-      <div class="slds-card" style="padding: 1rem; border-color: rgba(255, 85, 0, 0.3);">
-        <div style="font-family: 'Geist Mono', monospace; font-size: 0.6875rem; color: #FF5500; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">
-          EXECUTIVE DEFENSE SUMMARY
+      <!-- Presentation & Architecture Deck Launcher -->
+      <div class="slds-card" style="padding: 1rem; border: 1px solid rgba(0, 229, 255, 0.4); background: linear-gradient(180deg, rgba(16, 26, 42, 0.85) 0%, rgba(11, 14, 20, 0.95) 100%);">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 0.6875rem; color: #00E5FF; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+          <span>ENGINEERING SLIDES DECK</span>
+          <span class="slds-badge" style="color: #00E5FF; font-size: 0.625rem; border-color: rgba(0,229,255,0.3);">10 SLIDES</span>
         </div>
         <p style="font-size: 0.75rem; color: #9BA1B0; line-height: 1.5; margin-bottom: 0.75rem;">
-          "Sir, this project replaces hardware dependency with high-performance edge multimodal sensory computing operating directly on any phone or laptop browser."
+          Widescreen engineering slides with 60 FPS biometric benchmarks, edge DSP schematics, and zero-BOM hardware analysis.
         </p>
-        <button id="btn-quick-audit" class="slds-button-primary" style="width: 100%; font-size: 0.75rem;" onclick="document.getElementById('btn-export-report').click()">
-          VIEW CERTIFIED AUDIT REPORT
-        </button>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <a href="presentation/index.html" target="_blank" class="slds-button-primary" style="text-decoration: none; text-align: center; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: linear-gradient(135deg, #00E5FF, #0099B8); color: #07080B; font-weight: 700; padding: 0.5rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            OPEN WEB SLIDES (1-CLICK)
+          </a>
+          <a href="presentation/NEURALIS_OMNI_EXECUTIVE_DECK.pptx" download class="slds-button-secondary" style="text-decoration: none; text-align: center; font-size: 0.6875rem; color: #F2F4F8; display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.4rem;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            DOWNLOAD POWERPOINT (.PPTX)
+          </a>
+        </div>
       </div>
 
     </aside>
