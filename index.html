@@ -197,14 +197,27 @@
       height: 100%;
     }
 
-    /* Hidden video element used as webcam source */
+    /* Hardware Video Element (Visible for GPU Decode) */
     #webcam-video {
       position: absolute;
       top: 0;
       left: 0;
-      width: 1px;
-      height: 1px;
-      opacity: 0.001;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.9;
+      z-index: 1;
+      transform: scaleX(-1);
+      display: none;
+    }
+
+    #vision-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
       pointer-events: none;
     }
 

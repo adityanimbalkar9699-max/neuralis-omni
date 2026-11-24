@@ -72,6 +72,7 @@ export class VisionEngine {
 
       this.stream = await navigator.mediaDevices.getUserMedia(constraints);
       this.video.srcObject = this.stream;
+      this.video.style.display = 'block';
       await this.video.play();
 
       this.syntheticMode = false;
@@ -88,6 +89,9 @@ export class VisionEngine {
 
   startSyntheticMode() {
     this.syntheticMode = true;
+    if (this.video) {
+      this.video.style.display = 'none';
+    }
     this.active = true;
     this.telemetry.faceDetected = true;
     this.startRenderLoop();
@@ -242,8 +246,8 @@ export class VisionEngine {
           this.telemetry.statusText = 'TARGET LOCKED // ATTENTION OPTIMAL';
         }
 
-        // Smooth attention transitions
-        this.smoothAttention += (targetAttention - this.smoothAttention) * 0.15;
+        // Instant Responsive Attention Transition
+        this.smoothAttention += (targetAttention - this.smoothAttention) * 0.35;
         this.telemetry.attentionScore = +this.smoothAttention.toFixed(1);
         this.telemetry.cognitiveLoad = +(35.0 + (this.telemetry.motionEnergy * 45)).toFixed(1);
 
@@ -335,15 +339,15 @@ export class VisionEngine {
     ctx.lineTo(centerX + faceW * 0.18, mouthY);
     ctx.stroke();
 
-    // Update Telemetry
-    this.telemetry.attentionScore = +(94.8 + Math.sin(this.syntheticPhase * 0.5) * 3.2).toFixed(1);
-    this.telemetry.cognitiveLoad = +(44.0 + Math.cos(this.syntheticPhase * 0.4) * 8.5).toFixed(1);
+    // Static Standby Telemetry (No fake cycling!)
+    this.telemetry.attentionScore = 95.0;
+    this.telemetry.cognitiveLoad = 40.0;
     this.telemetry.blinkRate = 14;
     this.telemetry.gazeX = +(gazeOffset / 20).toFixed(2);
     this.telemetry.gazeY = 0.02;
-    this.telemetry.motionEnergy = +(0.11 + Math.abs(Math.sin(this.syntheticPhase)) * 0.06).toFixed(2);
+    this.telemetry.motionEnergy = 0.08;
     this.telemetry.latencyMs = 5.2;
-    this.telemetry.statusText = 'SYNTHETIC TEST STREAM // STANDBY';
+    this.telemetry.statusText = 'STANDBY // CLICK [START WEBCAM] FOR LIVE OPTICAL SENSORS';
   }
 
   renderBiometricHUD(now, w, h) {
