@@ -191,7 +191,7 @@ export class Neural3DCore {
     ctx.clearRect(0, 0, w, h);
 
     // Dynamic Radius Expansion based on Audio Frequency & Reasoning state
-    const audioExpansion = this.audioEnergy * 35;
+    const audioExpansion = this.audioEnergy * 70;
     const reasoningPulse = this.isReasoning ? Math.sin(timestamp * 0.008) * 15 : 0;
     this.radius = this.baseRadius + audioExpansion + reasoningPulse;
 

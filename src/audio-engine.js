@@ -61,15 +61,26 @@ export class AudioEngine {
       if (!AudioCtx) throw new Error('Web Audio API not supported');
 
       this.audioCtx = new AudioCtx();
+      if (this.audioCtx.state === 'suspended') {
+        await this.audioCtx.resume();
+      }
+
       this.analyser = this.audioCtx.createAnalyser();
       this.analyser.fftSize = 256;
-      this.analyser.smoothingTimeConstant = 0.8;
+      this.analyser.smoothingTimeConstant = 0.65;
 
       this.bufferLength = this.analyser.frequencyBinCount;
       this.dataArray = new Uint8Array(this.bufferLength);
       this.timeDataArray = new Uint8Array(this.bufferLength);
 
-      this.micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      this.micStream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: false,
+          autoGainControl: true
+        }, 
+        video: false 
+      });
       this.source = this.audioCtx.createMediaStreamSource(this.micStream);
       this.source.connect(this.analyser);
 
@@ -150,8 +161,8 @@ export class AudioEngine {
     const db = rms > 0.0001 ? 20 * Math.log10(rms) : -90;
     this.telemetry.dbLevel = +Math.max(-90, Math.min(0, db)).toFixed(1);
 
-    // Voice Activity Detection (VAD) threshold
-    this.telemetry.vadActive = this.telemetry.dbLevel > -42.0;
+    // Voice Activity Detection (VAD) threshold (calibrated for laptop & mobile mics)
+    this.telemetry.vadActive = this.telemetry.dbLevel > -55.0;
 
     // Fundamental Frequency Peak Bin Estimation
     let maxVal = 0;
@@ -164,7 +175,7 @@ export class AudioEngine {
     }
     const nyquist = this.audioCtx ? this.audioCtx.sampleRate / 2 : 24000;
     const estPitch = (maxIndex * nyquist) / this.bufferLength;
-    if (this.telemetry.vadActive && estPitch > 60 && estPitch < 500) {
+    if (this.telemetry.vadActive && estPitch > 65 && estPitch < 600) {
       this.telemetry.pitchHz = +estPitch.toFixed(1);
     }
 
@@ -231,7 +242,8 @@ export class AudioEngine {
     const barWidth = (w / barCount) - 1.5;
 
     for (let i = 0; i < barCount; i++) {
-      const val = this.dataArray ? this.dataArray[i * step] : 0;
+      const rawVal = this.dataArray ? this.dataArray[i * step] : 0;
+      const val = Math.min(255, rawVal * 1.35);
       const barHeight = (val / 255) * (h - 12);
       const x = i * (barWidth + 1.5);
       const y = h - barHeight;

@@ -284,7 +284,16 @@ class NeuralisApp {
 
   updateVisionTelemetry(telemetry) {
     this.state.visionTelemetry = telemetry;
-    if (this.dom.valAttention) this.dom.valAttention.innerText = `${telemetry.attentionScore}%`;
+    if (this.dom.valAttention) {
+      this.dom.valAttention.innerText = `${telemetry.attentionScore}%`;
+      if (telemetry.attentionScore < 45) {
+        this.dom.valAttention.style.color = '#E30613';
+      } else if (telemetry.attentionScore < 75) {
+        this.dom.valAttention.style.color = '#FF5500';
+      } else {
+        this.dom.valAttention.style.color = '#00E5FF';
+      }
+    }
     if (this.dom.valCognitive) this.dom.valCognitive.innerText = `${telemetry.cognitiveLoad}%`;
     if (this.dom.valLatency) this.dom.valLatency.innerText = `${telemetry.latencyMs}ms`;
     if (this.dom.valFps) this.dom.valFps.innerText = `${telemetry.fps} FPS`;
